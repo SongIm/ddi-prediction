@@ -1,20 +1,31 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import json
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import pandas as pd
-import json
 from torch.optim.lr_scheduler import ReduceLROnPlateau
+import argparse
+
+# Argument parsing
+def parse_args():
+    parser = argparse.ArgumentParser(description="Fine-tune DDI model using pre-trained weights and learning rate decay.")
+    parser.add_argument(
+        "--embedding_names",
+        nargs="+",
+        required=True,
+        help="List of embedding names (prefix only, without _train.pt)."
+    )
+    return parser.parse_args()
+
+args = parse_args()
+embedding_names = args.embedding_names
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print("Using device:", device)
 
-embedding_names = [
-    "psp_bio_ssp_dataset",
-    "ssp_bio_dataset"
-]
 results = []
 
 for emb_name in embedding_names:
@@ -83,7 +94,7 @@ for emb_name in embedding_names:
     scheduler = ReduceLROnPlateau(optimizer, mode='max', factor=0.1, patience=5, verbose=True, min_lr=1e-6)
     criterion = nn.CrossEntropyLoss()
 
-    # fine-tuning settings
+    # fine-tuning
     num_epochs = 100
     best_val_acc = 0
     patience = 20
@@ -98,7 +109,7 @@ for emb_name in embedding_names:
             loss.backward()
             optimizer.step()
 
-        # validation accuracy
+        # validation
         model.eval()
         y_pred = []
         y_val_true = []
@@ -111,7 +122,6 @@ for emb_name in embedding_names:
         y_val_true = torch.cat(y_val_true)
         acc = accuracy_score(y_val_true, y_pred)
 
-        # scheduler step
         scheduler.step(acc)
 
         print(f"Epoch {epoch}, Val Acc: {acc:.4f}, Best Val Acc: {best_val_acc:.4f}, Wait: {wait}/{patience}, LR: {optimizer.param_groups[0]['lr']:.6f}")
@@ -130,7 +140,7 @@ for emb_name in embedding_names:
 
     print(f"Fine-tuning complete for {emb_name}. Best Val Acc: {best_val_acc:.4f}")
 
-    # test accuracy
+    # test
     model.load_state_dict(torch.load(f"fine_tuned_best_model_{emb_name}.pth"))
     model.eval()
     y_pred_test = []

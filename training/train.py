@@ -6,36 +6,41 @@ from torch.utils.data import DataLoader, TensorDataset
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 import pandas as pd
+import argparse
+
+# Argument parser
+def parse_args():
+    parser = argparse.ArgumentParser(description="Train DDI prediction model with given embeddings")
+    parser.add_argument(
+        "--embedding_names",
+        nargs="+",
+        required=True,
+        help="List of embedding base names (without _train.pt/.json). Ex: psp_bio_ssp_dataset ssp_bio_dataset"
+    )
+    return parser.parse_args()
+
+args = parse_args()
+embedding_names = args.embedding_names
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print("Using device:", device)
 
-# embedding list
-embedding_names = [
-    "psp_bio_ssp_dataset",
-    "ssp_bio_dataset"
-]
-
 results = []
 
-# loop over each embedding combination
 for emb_name in embedding_names:
-    print(f"\n Training for {emb_name} ...")
+    print(f"\n🔧 Training for {emb_name} ...")
 
-    # load best hyperparameters
     with open(f"best_params_{emb_name}.json") as f:
         best_params = json.load(f)
     hidden_dim = best_params["hidden_dim"]
     dropout = best_params["dropout"]
     lr = best_params["lr"]
 
-    # load train/test dataset
     trainset = torch.load(f"{emb_name}_train.pt")
     testset = torch.load(f"{emb_name}_test.pt")
     X_train_full, y_train_full = trainset[0], trainset[1]
     X_test, y_test = testset[0], testset[1]
 
-    # check label range
     if y_train_full.min() == 1:
         y_train_full -= 1
         y_test -= 1
@@ -43,7 +48,6 @@ for emb_name in embedding_names:
     input_dim = X_train_full.shape[1]
     output_dim = 79
 
-    # train/validation stratified split
     X_train_np = X_train_full.numpy()
     y_train_np = y_train_full.numpy()
     X_train_split, X_val_split, y_train_split, y_val_split = train_test_split(
@@ -57,12 +61,10 @@ for emb_name in embedding_names:
     X_test = X_test.to(device)
     y_test = y_test.to(device)
 
-    # DataLoader
     train_loader = DataLoader(TensorDataset(X_train, y_train), batch_size=64, shuffle=True)
     val_loader = DataLoader(TensorDataset(X_val, y_val), batch_size=512)
     test_loader = DataLoader(TensorDataset(X_test, y_test), batch_size=512)
 
-    # model definition
     model = nn.Sequential(
         nn.Linear(input_dim, input_dim),
         nn.ReLU(),
@@ -76,12 +78,11 @@ for emb_name in embedding_names:
     optimizer = optim.Adam(model.parameters(), lr=lr)
     criterion = nn.CrossEntropyLoss()
 
-    # early stopping setup
     best_val_acc = 0
     patience = 20
     wait = 0
 
-    for epoch in range(1, 301):  # train 200 epoch before starting early stopping
+    for epoch in range(1, 301):
         model.train()
         for X_batch, y_batch in train_loader:
             optimizer.zero_grad()
@@ -90,7 +91,6 @@ for emb_name in embedding_names:
             loss.backward()
             optimizer.step()
 
-        # validation accuracy
         model.eval()
         y_pred = []
         with torch.no_grad():
@@ -102,7 +102,6 @@ for emb_name in embedding_names:
 
         print(f"Epoch {epoch}, Val Acc: {acc:.4f}, Best: {best_val_acc:.4f}, Wait: {wait}/{patience}")
 
-        # early stopping
         if acc >= best_val_acc:
             best_val_acc = acc
             wait = 0
@@ -115,7 +114,6 @@ for emb_name in embedding_names:
             print("Early stopping triggered.")
             break
 
-    # test accuracy
     model.eval()
     y_pred_test = []
     with torch.no_grad():
@@ -128,8 +126,8 @@ for emb_name in embedding_names:
 
     results.append([emb_name, input_dim, epoch, best_val_acc, test_acc])
 
-# save result as csv
+# Save result
 df_results = pd.DataFrame(results, columns=['Feature Combination', 'Input dim', 'Epochs', 'Best Val Accuracy', 'Test Accuracy'])
 print(df_results)
-df_results.to_csv('ssp_bio_and_psp_ssp_bio_result.csv', index=False)
+df_results.to_csv(f"train_results_{len(embedding_names)}embs.csv", index=False)
 print("All results saved")

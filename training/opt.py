@@ -5,18 +5,27 @@ import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import train_test_split
 import json
+import argparse
+
+# 🧩 argparse로 embedding_names 받기
+def parse_args():
+    parser = argparse.ArgumentParser(description="Run Optuna hyperparameter search for DDI prediction")
+    parser.add_argument(
+        "--embedding_names",
+        nargs="+",
+        required=True,
+        help="List of base filenames (without .pt) for training data. e.g. psp_bio_ssp_dataset ssp_bio_dataset"
+    )
+    return parser.parse_args()
+
+args = parse_args()
+embedding_names = args.embedding_names
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(f" Using device: {device}")
-
-# embedding list
-embedding_names = [
-    "psp_bio_ssp_dataset",
-    "ssp_bio_dataset"
-]
+print(f"Using device: {device}")
 
 for emb_name in embedding_names:
-    print(f"\n Running Optuna for {emb_name}...")
+    print(f"\n🔍 Running Optuna for {emb_name}...")
 
     # load data
     data = torch.load(f"{emb_name}_train.pt")
@@ -64,7 +73,7 @@ for emb_name in embedding_names:
     def objective(trial):
         hidden_dim = trial.suggest_int("hidden_dim", 512, 2048, step=256)
         dropout = trial.suggest_float("dropout", 0.1, 0.5)
-        lr = trial.suggest_loguniform("lr", 1e-5, 1e-2)
+        lr = trial.suggest_float("lr", 1e-5, 1e-2, log=True)
 
         train_loader, val_loader = get_dataloaders()
         model = DDI_Predictor(input_dim, hidden_dim, dropout).to(device)
@@ -99,8 +108,7 @@ for emb_name in embedding_names:
 
     print("Best Hyperparameters:", study.best_params)
 
-    # save best params each embeddings
+    # save best params
     with open(f"best_params_{emb_name}.json", "w") as f:
         json.dump(study.best_params, f)
-    print(f"Best hyperparameters saved to best_params_{emb_name}.json")
-
+    print(f"✅ Best hyperparameters saved to best_params_{emb_name}.json")
