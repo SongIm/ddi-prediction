@@ -12,13 +12,13 @@ All training and test .pt files must be placed in the same directory (e.g., ./da
 
 For example:
 
-- `psp_bio_ssp_dataset_train.pt`
+- `psp_biobert_ssp_dataset_train.pt`
 
-- `psp_bio_ssp_dataset_test.pt`
+- `psp_biobert_ssp_dataset_test.pt`
 
-- `ssp_bio_dataset_train.pt`
+- `ssp_biobert_dataset_train.pt`
 
-- `ssp_bio_dataset_test.pt`
+- `ssp_biobert_dataset_test.pt`
 
 Each dataset must be a .pt file created with the following structure:
 
@@ -30,7 +30,7 @@ Each dataset must be a .pt file created with the following structure:
 
 - `drug_a_list, drug_b_list: list of DrugBank IDs used for evaluation or interpretation`
 
-- `drug_a_list and drug_b_list are not used during training, but may be required later for evaluation or post-analysis.`
+drug_a_list and drug_b_list are not used during training, but may be required later for evaluation or post-analysis.
 
 ---
 
@@ -39,7 +39,7 @@ Each dataset must be a .pt file created with the following structure:
 ### Step 1
 
 ```bash
-python training/opt.py --embedding_names psp_bio_ssp_dataset ssp_bio_dataset
+python training/opt.py --embedding_names psp_biobert_ssp_dataset ssp_biobert_dataset
 ```
 
 Uses Optuna to search for best hidden_dim, dropout, and learning_rate
@@ -49,7 +49,7 @@ Saves result as best_params_<name>.json
 ### Step 2
 
 ```bash
-python training/train.py --embedding_names psp_bio_ssp_dataset ssp_bio_dataset
+python training/train.py --embedding_names psp_biobert_ssp_dataset ssp_biobert_dataset
 ```
 
 Loads best hyperparameters
