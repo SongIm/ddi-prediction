@@ -45,8 +45,6 @@ python training/opt.py --embedding_names psp_biobert_ssp_dataset ssp_biobert_dat
 
 Uses Optuna to search for best hidden_dim, dropout, and learning_rate
 
-Saves result as best_params_{embedding_name}.json
-
 ### Step 2
 
 ```bash
@@ -57,8 +55,6 @@ Loads best hyperparameters
 
 Trains model with early stopping (≥ 200 epochs)
 
-Saves result as best_model_{embedding_name}.pth
-
 ### Step 3
 
 ```bash
@@ -68,8 +64,6 @@ python training/fine_tune.py --embedding_names psp_bio_ssp_dataset ssp_bio_datas
 Loads previous best model and parameters
 
 Applies learning rate decay (ReduceLROnPlateau)
-
-Saves result as fine_tuned_best_model_{embedding_name}.pth
 
 ---
 
