@@ -7,7 +7,6 @@ from sklearn.model_selection import train_test_split
 import json
 import argparse
 
-# 🧩 argparse로 embedding_names 받기
 def parse_args():
     parser = argparse.ArgumentParser(description="Run Optuna hyperparameter search for DDI prediction")
     parser.add_argument(
@@ -111,4 +110,4 @@ for emb_name in embedding_names:
     # save best params
     with open(f"best_params_{emb_name}.json", "w") as f:
         json.dump(study.best_params, f)
-    print(f"✅ Best hyperparameters saved to best_params_{emb_name}.json")
+    print(f"Best hyperparameters saved to best_params_{emb_name}.json")
