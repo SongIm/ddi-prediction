@@ -126,8 +126,9 @@ for emb_name in embedding_names:
 
     results.append([emb_name, input_dim, epoch, best_val_acc, test_acc])
 
-# Save result
-df_results = pd.DataFrame(results, columns=['Feature Combination', 'Input dim', 'Epochs', 'Best Val Accuracy', 'Test Accuracy'])
-print(df_results)
-df_results.to_csv(f"train_results_{len(embedding_names)}embs.csv", index=False)
-print("All results saved")
+# Save result for each embedding
+for result in results:
+    emb_name = result[0]
+    df_single = pd.DataFrame([result], columns=['Feature Combination', 'Input dim', 'Epochs', 'Best Val Accuracy', 'Test Accuracy'])
+    df_single.to_csv(f"{emb_name}_result.csv", index=False)
+    print(f"Saved result to {emb_name}_result.csv")
