@@ -154,8 +154,9 @@ for emb_name in embedding_names:
 
     results.append([emb_name, input_dim, epoch, best_val_acc, test_acc])
 
-# save result
-df_results = pd.DataFrame(results, columns=['Feature Combination', 'Input dim', 'Epochs', 'Best Val Acc', 'Test Acc'])
-print(df_results)
-df_results.to_csv('fine_tuning_results_all.csv', index=False)
-print("All results saved to fine_tuning_results_all.csv")
+# Save result for each embedding
+for result in results:
+    emb_name = result[0]
+    df_single = pd.DataFrame([result], columns=['Feature Combination', 'Input dim', 'Epochs', 'Best Val Acc', 'Test Acc'])
+    df_single.to_csv(f"fine_tuning_results_{emb_name}.csv", index=False)
+    print(f"Saved result to fine_tuning_results_{emb_name}.csv")
