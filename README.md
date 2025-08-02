@@ -30,7 +30,7 @@ Each dataset must be a .pt file created with the following structure:
 
 - `drug_a_list, drug_b_list: list of DrugBank IDs used for evaluation or interpretation`
 
-**Note: drug_a_list and drug_b_list are not used during training, but may be required later for evaluation or post-analysis.
+**Note:** drug_a_list and drug_b_list are not used during training, but may be required later for evaluation or post-analysis.
 
 ---
 
