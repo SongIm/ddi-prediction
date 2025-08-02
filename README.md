@@ -69,3 +69,23 @@ Loads previous best model and parameters
 Applies ReduceLROnPlateau for LR decay
 
 Saves result as fine_tuned_best_model_<name>.pth
+
+---
+
+## Output Files
+
+- ```opt.py:```
+  
+ best_params_<name>.json – best hyperparameters found by Optuna
+
+- ```train.py:```
+
+best_model_<name>.pth – model saved with best validation accuracy
+
+{embedding_name}_result.csv
+
+- ```fine_tune.py:```
+
+fine_tuned_best_model_<name>.pth – fine-tuned model with LR decay
+
+fine_tuning_results_{embedding_name}.csv
