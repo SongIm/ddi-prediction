@@ -58,7 +58,7 @@ Trains model with early stopping (≥ 200 epochs)
 ### Step 3
 
 ```bash
-python training/fine_tune.py --embedding_names psp_biobert_ssp_dataset ssp_bio_dataset
+python training/fine_tune.py --embedding_names psp_biobert_ssp_dataset ssp_biobert_dataset
 ```
 
 Loads previous best model and parameters
