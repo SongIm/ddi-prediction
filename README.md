@@ -1,4 +1,4 @@
-This repository contains PyTorch training code for predicting Drug–Drug Interactions (DDIs) using combinations of different drug embeddings, including BioBERT, SSP (Structure-based), and PSP (Protein-based) representations.
+This repository contains PyTorch training code for predicting Drug–Drug Interactions (DDIs) using combinations of different drug embeddings, including BioBERT, SSP (Structure Similarity Profile), and PSP (Protein Similarity Profile) representations.
 
 ---
 
