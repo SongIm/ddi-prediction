@@ -37,7 +37,7 @@ for emb_name in embedding_names:
     hidden_dim = params['hidden_dim']
     dropout = params['dropout']
     lr = params['lr']
-    print(f"✅ Loaded best params: {params}")
+    print(f"Loaded best params: {params}")
 
     # dataset load
     trainset = torch.load(f"{emb_name}_train.pt")
