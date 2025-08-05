@@ -13,7 +13,7 @@ output_dir = sys.argv[2]
 # source directories
 base_dirs = {
     "psp": "./psp_embeddings",
-    "bio": "./biobert_embeddings",
+    "biobert": "./biobert_embeddings",
     "ssp": "./ssp_embeddings",
 }
 
