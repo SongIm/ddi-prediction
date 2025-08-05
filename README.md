@@ -37,7 +37,7 @@ drug_a_list and drug_b_list are not used during training, but may be required la
 
 ## Training process
 
-### Step 1
+### Step 1: Hyperparameter Optimization
 
 ```bash
 python training/opt.py --embedding_names psp_biobert_ssp_dataset ssp_biobert_dataset
@@ -45,7 +45,9 @@ python training/opt.py --embedding_names psp_biobert_ssp_dataset ssp_biobert_dat
 
 Uses Optuna to search for best hidden_dim, dropout, and learning_rate
 
-### Step 2
+### Step 2: Model Training
+
+
 
 ```bash
 python training/train.py --embedding_names psp_biobert_ssp_dataset ssp_biobert_dataset
@@ -55,7 +57,9 @@ Loads best hyperparameters
 
 Trains model with early stopping (≥ 200 epochs)
 
-### Step 3
+### Step 3: Fine-tuning (Additional Training)
+
+We load the previously trained model and continue training using a learning rate scheduler (ReduceLROnPlateau).
 
 ```bash
 python training/fine_tune.py --embedding_names psp_biobert_ssp_dataset ssp_biobert_dataset
