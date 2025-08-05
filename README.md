@@ -35,7 +35,7 @@ Merged .pt files are saved in merged_output/.
 Use interaction annotations (e.g., final_interaction.csv) to build the dataset:
 
 ```bash
-python make_dataset.py merged_output/psp_biobert_ssp_dataset.pt
+python make_dataset.py merged_output/psp_biobert_ssp/
 ```
 
 ### Step 4: Train-Test Split
@@ -43,7 +43,7 @@ python make_dataset.py merged_output/psp_biobert_ssp_dataset.pt
 Split the dataset into 80% train / 20% test:
 
 ```bash
-python split.py merged_output/{embedding_name}_dataset.pt
+python split.py {embedding_name}_dataset.pt
 ```
 
 This generates:
@@ -90,7 +90,7 @@ drug_a_list and drug_b_list are not used during training, but may be required la
 ### Step 1: Hyperparameter Optimization
 
 ```bash
-python training/opt.py --embedding_names psp_biobert_ssp_dataset ssp_biobert_dataset
+python opt.py --embedding_names psp_biobert_ssp_dataset ssp_biobert_dataset
 ```
 
 Uses Optuna to search for best hidden_dim, dropout, and learning_rate
@@ -100,7 +100,7 @@ Uses Optuna to search for best hidden_dim, dropout, and learning_rate
 
 
 ```bash
-python training/train.py --embedding_names psp_biobert_ssp_dataset ssp_biobert_dataset
+python train.py --embedding_names psp_biobert_ssp_dataset ssp_biobert_dataset
 ```
 
 Loads best hyperparameters
@@ -110,7 +110,7 @@ Trains model with early stopping (≥ 200 epochs)
 ### Step 3: Fine-tuning (Additional Training)
 
 ```bash
-python training/fine_tune.py --embedding_names psp_biobert_ssp_dataset ssp_biobert_dataset
+python fine_tune.py --embedding_names psp_biobert_ssp_dataset ssp_biobert_dataset
 ```
 
 Loads previous best model and parameters
