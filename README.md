@@ -43,18 +43,18 @@ python make_dataset.py merged_output/
 Split the dataset into 80% train / 20% test:
 
 ```bash
-python split.py merged_output/{input_dataset}.pt
+python split.py merged_output/{embedding_name}.pt
 ```
 
 This generates:
 
-- `{input_dataset}_train.pt`
+- `{embedding_name}_train.pt`
 
-- `{input_dataset}_test.pt`
+- `{embedding_name}_test.pt`
 
-## Input Data Structure
+## Final Input Format for Training
 
-All training and test .pt files must be placed in the same directory (e.g., ./data/), and follow the naming convention:
+After preprocessing, training and test .pt files must follow this structure:
 
 - `{embedding_name}_train.pt`
 
