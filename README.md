@@ -23,7 +23,7 @@ Each script will generate .pt files (e.g., DB00001.pt) in its respective embeddi
 To create a unified embedding per drug by concatenating multiple sources (e.g., PSP + BioBERT), use:
 
 ```bash
-python merge_embeddings.py psp+bio+ssp merged_output/
+python merge_embeddings.py psp+biobert+ssp merged_output/
 ```
 
 This merges the .pt files from each source (must have matching drug IDs).
