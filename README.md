@@ -136,3 +136,14 @@ best_model_{embedding_name}.pth – model saved with best validation accuracy
 fine_tuned_best_model_{embedding_name}.pth – fine-tuned model with LR decay
 
 fine_tuning_results_{embedding_name}.csv - summary after fine-tuning, including validation and test accuracies
+
+---
+## Requirements
+
+All dependencies are listed in the requirements.txt file.
+
+You can install them with:
+
+```bash
+pip install -r requirements.txt
+```
