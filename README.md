@@ -90,7 +90,7 @@ drug_a_list and drug_b_list are not used during training, but may be required la
 ### Step 1: Hyperparameter Optimization
 
 ```bash
-python opt.py --embedding_names psp_biobert_ssp_dataset ssp_biobert_dataset
+python opt.py --embedding_names ../preprocessing/psp_biobert_ssp_dataset ../preprocessing/ssp_biobert_dataset
 ```
 
 Uses Optuna to search for best hidden_dim, dropout, and learning_rate
@@ -100,7 +100,7 @@ Uses Optuna to search for best hidden_dim, dropout, and learning_rate
 
 
 ```bash
-python train.py --embedding_names psp_biobert_ssp_dataset ssp_biobert_dataset
+python train.py --embedding_names ../preprocessing/psp_biobert_ssp_dataset ../preprocessing/ssp_biobert_dataset
 ```
 
 Loads best hyperparameters
@@ -110,7 +110,7 @@ Trains model with early stopping (≥ 200 epochs)
 ### Step 3: Fine-tuning (Additional Training)
 
 ```bash
-python fine_tune.py --embedding_names psp_biobert_ssp_dataset ssp_biobert_dataset
+python fine_tune.py --embedding_names ../preprocessing/psp_biobert_ssp_dataset ../preprocessing/ssp_biobert_dataset
 ```
 
 Loads previous best model and parameters
