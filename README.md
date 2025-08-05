@@ -30,7 +30,7 @@ This merges the .pt files from each source (must have matching drug IDs).
 
 Merged .pt files are saved in merged_output/.
 
-### Step 3: Build Dataset from Drug Pairs
+### Step 3: Make Dataset from Drug Pairs
 
 Use interaction annotations (e.g., final_interaction.csv) to build the dataset:
 
