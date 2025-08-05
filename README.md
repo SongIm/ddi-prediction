@@ -23,7 +23,7 @@ Each script will generate .pt files (e.g., DB00001.pt) in its respective embeddi
 To create a unified embedding per drug by concatenating multiple sources (e.g., PSP + BioBERT), use:
 
 ```bash
-python merge_embeddings.py psp+biobert+ssp merged_output/
+python merge_embeddings.py psp+biobert+ssp merged_output/psp_biobert_ssp
 ```
 
 This merges the .pt files from each source (must have matching drug IDs).
@@ -35,7 +35,7 @@ Merged .pt files are saved in merged_output/.
 Use interaction annotations (e.g., final_interaction.csv) to build the dataset:
 
 ```bash
-python make_dataset.py merged_output/
+python make_dataset.py merged_output/psp_biobert_ssp_dataset.pt
 ```
 
 ### Step 4: Train-Test Split
@@ -43,7 +43,7 @@ python make_dataset.py merged_output/
 Split the dataset into 80% train / 20% test:
 
 ```bash
-python split.py merged_output/{embedding_name}.pt
+python split.py merged_output/{embedding_name}_dataset.pt
 ```
 
 This generates:
