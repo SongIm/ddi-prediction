@@ -2,7 +2,7 @@ This repository contains PyTorch training code for predicting Drug–Drug Intera
 
 ---
 
-## Preprocessing Pipeline
+## Preprocessing
 
 The preprocessing/ directory provides scripts to generate and process drug embeddings into final training-ready datasets.
 
@@ -85,7 +85,7 @@ drug_a_list and drug_b_list are not used during training, but may be required la
 
 ---
 
-## Training process
+## Training
 
 ### Step 1: Hyperparameter Optimization
 
