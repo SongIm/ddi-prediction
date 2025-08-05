@@ -2,6 +2,56 @@ This repository contains PyTorch training code for predicting Drug–Drug Intera
 
 ---
 
+## Preprocessing Pipeline
+
+The preprocessing/ directory provides scripts to generate and process drug embeddings into final training-ready datasets.
+
+### Step 1: Generate Individual Embeddings
+
+Create individual embedding files for each drug using the following scripts:
+
+- `make_biobert_embeddings.py – generates BioBERT embeddings from drug names/descriptions`
+
+- `make_ssp_embeddings.py – computes structure-based (SSP) embeddings from SMILES`
+
+- `make_psp_embeddings.py – computes protein-based (PSP) embeddings from interaction profiles`
+
+Each script will generate .pt files (e.g., DB00001.pt) in its respective embedding folder.
+
+### Step 2: Merge Embeddings
+
+To create a unified embedding per drug by concatenating multiple sources (e.g., PSP + BioBERT), use:
+
+```bash
+python merge_embeddings.py psp+bio+ssp merged_output/
+```
+
+This merges the .pt files from each source (must have matching drug IDs).
+
+Merged .pt files are saved in merged_output/.
+
+### Step 3: Build Dataset from Drug Pairs
+
+Use interaction annotations (e.g., final_interaction.csv) to build the dataset:
+
+```bash
+python make_dataset.py merged_output/
+```
+
+### Step 4: Train-Test Split
+
+Split the dataset into 80% train / 20% test:
+
+```bash
+python split.py merged_output/{input_dataset}.pt
+```
+
+This generates:
+
+- `{input_dataset}_train.pt`
+
+- `{input_dataset}_test.pt`
+
 ## Input Data Structure
 
 All training and test .pt files must be placed in the same directory (e.g., ./data/), and follow the naming convention:
@@ -58,8 +108,6 @@ Loads best hyperparameters
 Trains model with early stopping (≥ 200 epochs)
 
 ### Step 3: Fine-tuning (Additional Training)
-
-We load the previously trained model and continue training using a learning rate scheduler (ReduceLROnPlateau).
 
 ```bash
 python training/fine_tune.py --embedding_names psp_biobert_ssp_dataset ssp_biobert_dataset
