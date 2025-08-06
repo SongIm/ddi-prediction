@@ -89,6 +89,8 @@ drug_a_list and drug_b_list are not used during training, but may be required la
 
 ### Step 1: Hyperparameter Optimization
 
+Run the training script from the training/ directory:
+
 ```bash
 python opt.py --embedding_names ../preprocessing/psp_biobert_ssp_dataset ../preprocessing/ssp_biobert_dataset
 ```
