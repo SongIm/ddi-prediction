@@ -48,7 +48,7 @@ for drug_id in common_drug_ids:
     for key in components:
         emb_path = get_embedding_path(key, drug_id)
         if not os.path.exists(emb_path):
-            print(f"⚠️ missing: {drug_id} - {key} can't find embedding")
+            print(f"missing: {drug_id} - {key} can't find embedding")
             valid = False
             break
         tensors.append(torch.load(emb_path))
