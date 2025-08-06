@@ -3,17 +3,17 @@ import csv
 import os
 from transformers import AutoTokenizer, AutoModel
 
-# Load BioBERT tokenizer and model
+# load BioBERT tokenizer and model
 tokenizer = AutoTokenizer.from_pretrained("dmis-lab/biobert-base-cased-v1.1")
 model = AutoModel.from_pretrained("dmis-lab/biobert-base-cased-v1.1")
 
-# Use GPU if available
+# use GPU if available
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = model.to(device)
 
 print("CUDA ok. using", "GPU." if torch.cuda.is_available() else "CPU.")
 
-# Split long text into chunks of <= 512 tokens
+# split long text into chunks of <= 512 tokens
 def chunk_text(text, max_tokens=512):
     tokens = tokenizer.tokenize(text)
     chunks = []
@@ -22,7 +22,7 @@ def chunk_text(text, max_tokens=512):
         chunks.append(tokenizer.convert_tokens_to_string(chunk))
     return chunks
 
-# Convert text to BioBERT embedding
+# convert text to BioBERT embedding
 def get_biobert_embeddings(text):
     embeddings = []
     for chunk in chunk_text(text):
@@ -37,9 +37,9 @@ def get_biobert_embeddings(text):
 output_dir = "./biobert_embeddings"
 os.makedirs(output_dir, exist_ok=True)
 
-saved_count = 0  # Count of successfully saved embeddings
+saved_count = 0  # Count saved embeddings
 
-# Read drug descriptions and create embeddings
+# create embeddings
 with open('drugbank_descriptions.csv', mode='r', encoding='utf-8') as file:
     reader = csv.DictReader(file)
 
@@ -52,13 +52,13 @@ with open('drugbank_descriptions.csv', mode='r', encoding='utf-8') as file:
             print(f"{drug_id} description doesn't exist.")
             continue
 
-        # Combine name and description
+        # combine name and description
         if drug_name not in drug_description:
             combined_text = f"DrugName: {drug_name}. Description: {drug_description}"
         else:
             combined_text = drug_description
 
-        # Skip long texts with > 1 chunk
+        # skip long texts with > 1 chunk
         chunks = chunk_text(combined_text)
         if len(chunks) > 1:
             print(f"{drug_id} skipped: too long (chunk count = {len(chunks)})")
