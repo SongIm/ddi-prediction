@@ -7,6 +7,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 import pandas as pd
 import argparse
+import os
 
 # Argument parser
 def parse_args():
@@ -30,7 +31,8 @@ results = []
 for emb_name in embedding_names:
     print(f"\n🔧 Training for {emb_name} ...")
 
-    with open(f"best_params_{emb_name}.json") as f:
+    param_file = f"best_params_{os.path.basename(emb_name)}.json"
+    with open(param_file) as f:
         best_params = json.load(f)
     hidden_dim = best_params["hidden_dim"]
     dropout = best_params["dropout"]
@@ -105,7 +107,8 @@ for emb_name in embedding_names:
         if acc >= best_val_acc:
             best_val_acc = acc
             wait = 0
-            torch.save(model.state_dict(), f"best_model_{emb_name}.pth")
+            save_model_path = f"best_model_{os.path.basename(emb_name)}.pth"
+            torch.save(model.state_dict(), save_model_path)
         else:
             if epoch >= 200:
                 wait += 1
@@ -130,5 +133,6 @@ for emb_name in embedding_names:
 for result in results:
     emb_name = result[0]
     df_single = pd.DataFrame([result], columns=['Feature Combination', 'Input dim', 'Epochs', 'Best Val Accuracy', 'Test Accuracy'])
-    df_single.to_csv(f"{emb_name}_result.csv", index=False)
+    csv_path = f"{os.path.basename(emb_name)}_result.csv"
+    df_single.to_csv(csv_path, index=False)
     print(f"Saved result to {emb_name}_result.csv")
