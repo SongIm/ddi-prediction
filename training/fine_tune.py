@@ -162,6 +162,7 @@ for emb_name in embedding_names:
 # Save result for each embedding
 for result in results:
     emb_name = result[0]
+    emb_basename = os.path.basename(emb_name)
     df_single = pd.DataFrame([result], columns=['Feature Combination', 'Input dim', 'Epochs', 'Best Val Acc', 'Test Acc'])
     df_single.to_csv(f"fine_tuning_results_{emb_basename}.csv", index=False)
     print(f"Saved result as fine_tuning_results_{emb_basename}.csv")
