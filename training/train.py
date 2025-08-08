@@ -29,7 +29,7 @@ print("Using device:", device)
 results = []
 
 for emb_name in embedding_names:
-    print(f"\n🔧 Training for {emb_name} ...")
+    print(f"\nTraining for {emb_name} ...")
 
     param_file = f"best_params_{os.path.basename(emb_name)}.json"
     with open(param_file) as f:
