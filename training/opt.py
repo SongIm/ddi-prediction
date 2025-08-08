@@ -25,7 +25,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
 for emb_name in embedding_names:
-    print(f"\n🔍 Running Optuna for {emb_name}...")
+    print(f"\n Running Optuna for {emb_name}...")
 
     # load data
     data = torch.load(f"{emb_name}_train.pt")
