@@ -8,6 +8,7 @@ from sklearn.metrics import accuracy_score
 import pandas as pd
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 import argparse
+import os
 
 # Argument parsing
 def parse_args():
@@ -32,7 +33,8 @@ for emb_name in embedding_names:
     print(f"\n Fine-tuning for {emb_name} with LR decay (stratified split)...")
 
     # best hyperparameter load
-    with open(f"best_params_{emb_name}.json") as f:
+    param_file = f"best_params_{os.path.basename(emb_name)}.json"
+    with open(param_file) as f:
         params = json.load(f)
     hidden_dim = params['hidden_dim']
     dropout = params['dropout']
@@ -86,12 +88,13 @@ for emb_name in embedding_names:
     ).to(device)
 
     # Load previous best model weights
-    best_model_path = f"best_model_{emb_name}.pth"
+    emb_basename = os.path.basename(emb_name)
+    best_model_path = f"best_model_{emb_basename}.pth"
     model.load_state_dict(torch.load(best_model_path))
     print(f"Loaded previous best model: {best_model_path}")
 
     optimizer = optim.Adam(model.parameters(), lr=lr)
-    scheduler = ReduceLROnPlateau(optimizer, mode='max', factor=0.1, patience=5, verbose=True, min_lr=1e-6)
+    scheduler = ReduceLROnPlateau(optimizer, mode='max', factor=0.1, patience=5, min_lr=1e-6)
     criterion = nn.CrossEntropyLoss()
 
     # fine-tuning
@@ -126,10 +129,12 @@ for emb_name in embedding_names:
 
         print(f"Epoch {epoch}, Val Acc: {acc:.4f}, Best Val Acc: {best_val_acc:.4f}, Wait: {wait}/{patience}, LR: {optimizer.param_groups[0]['lr']:.6f}")
 
+        emb_basename = os.path.basename(emb_name)
+
         if acc >= best_val_acc:
             best_val_acc = acc
             wait = 0
-            torch.save(model.state_dict(), f"fine_tuned_best_model_{emb_name}.pth")
+            torch.save(model.state_dict(), f"fine_tuned_best_model_{emb_basename}.pth")
             print(f"New fine-tuned best model saved. Best Val Acc updated to {best_val_acc:.4f}")
         else:
             wait += 1
@@ -141,7 +146,7 @@ for emb_name in embedding_names:
     print(f"Fine-tuning complete for {emb_name}. Best Val Acc: {best_val_acc:.4f}")
 
     # test
-    model.load_state_dict(torch.load(f"fine_tuned_best_model_{emb_name}.pth"))
+    model.load_state_dict(torch.load(f"fine_tuned_best_model_{emb_basename}.pth"))
     model.eval()
     y_pred_test = []
     with torch.no_grad():
@@ -158,5 +163,5 @@ for emb_name in embedding_names:
 for result in results:
     emb_name = result[0]
     df_single = pd.DataFrame([result], columns=['Feature Combination', 'Input dim', 'Epochs', 'Best Val Acc', 'Test Acc'])
-    df_single.to_csv(f"fine_tuning_results_{emb_name}.csv", index=False)
-    print(f"Saved result to fine_tuning_results_{emb_name}.csv")
+    df_single.to_csv(f"fine_tuning_results_{emb_basename}.csv", index=False)
+    print(f"Saved result to fine_tuning_results_{emb_basename}.csv")
