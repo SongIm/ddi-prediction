@@ -135,4 +135,4 @@ for result in results:
     df_single = pd.DataFrame([result], columns=['Feature Combination', 'Input dim', 'Epochs', 'Best Val Accuracy', 'Test Accuracy'])
     csv_path = f"{os.path.basename(emb_name)}_result.csv"
     df_single.to_csv(csv_path, index=False)
-    print(f"Saved result to {emb_name}_result.csv")
+    print(f"Saved result as {emb_name}_result.csv")
