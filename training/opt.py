@@ -6,6 +6,7 @@ from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import train_test_split
 import json
 import argparse
+import os
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Run Optuna hyperparameter search for DDI prediction")
@@ -108,6 +109,7 @@ for emb_name in embedding_names:
     print("Best Hyperparameters:", study.best_params)
 
     # save best params
-    with open(f"best_params_{emb_name}.json", "w") as f:
+    emb_basename = os.path.basename(emb_name)
+    with open(f"best_params_{emb_basename}.json", "w") as f:
         json.dump(study.best_params, f)
-    print(f"Best hyperparameters saved to best_params_{emb_name}.json")
+    print(f"Best hyperparameters saved to best_params_{emb_basename}.json")
