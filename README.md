@@ -149,3 +149,14 @@ You can install them with:
 ```bash
 pip install -r requirements.txt
 ```
+---
+## Dataset Sources
+
+The datasets used in this repository are described below.
+
+| File name | Source / Collection method | Description | License / Notes |
+|-----------|---------------------------|-------------|-----------------|
+| `PSP_pca.txt` | Seo, J.; Jung, H.; Ko, Y. **PRID: Prediction Model Using RWR for Interactions Between Drugs**. *Pharmaceutics* **2023**, 15, 2469. [https://doi.org/10.3390/pharmaceutics15102469](https://doi.org/10.3390/pharmaceutics15102469) | PSP vector data generated in the PRID study (PPI-based Random Walk with Restart, PCA-transformed) | Usage conditions as defined in the referenced paper |
+| `drugbank_descriptions.csv` | [DrugBank](https://go.drugbank.com/) (version 5.1) | Drug names and descriptions parsed from DrugBank | DrugBank license (non-commercial research use only) |
+| `final_interaction.csv` | Seo, J.; Jung, H.; Ko, Y. **PRID: Prediction Model Using RWR for Interactions Between Drugs**. *Pharmaceutics* **2023**, 15, 2469. [https://doi.org/10.3390/pharmaceutics15102469](https://doi.org/10.3390/pharmaceutics15102469) | Drug–drug interaction (DDI) dataset provided in the PRID study | Usage conditions as defined in the referenced paper |
+| `smiles.csv` | [DrugBank](https://go.drugbank.com/), [PubChem](https://pubchem.ncbi.nlm.nih.gov/), [ChEMBL](https://www.ebi.ac.uk/chembl/) | SMILES chemical structure data collected from multiple databases | Comply with each database’s license terms |
